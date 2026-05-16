@@ -52,7 +52,8 @@ button.secondary {
 
 .row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 10px;
   margin-top: 10px;
 }
 
@@ -77,6 +78,12 @@ button.secondary {
   display: flex;
   gap: 10px;
   align-items: center;
+}
+
+.topbar .right {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* 👈 controls spacing between buttons */
 }
 
 /* ---------------- DROPDOWN ---------------- */
@@ -168,6 +175,29 @@ button.secondary {
   background: #4f7cff;
 }
 
+/* edit preset button */
+.dropdown-item button {
+  background: #3a3f4b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+
+  transition: 0.15s;
+}
+
+.dropdown-item button:hover {
+  background: #4a5160;
+}
+
+/* keeps it grey even when preset row is selected */
+.dropdown-item.active button {
+  background: #2f3440;
+}
+
+.dropdown-item.active button:hover {
+  background: #3b4250;
+}
+
 /* empty state */
 .dropdown-empty {
   padding: 8px;
@@ -181,7 +211,7 @@ button.secondary {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
 }
 
 /* messages */
@@ -189,7 +219,20 @@ button.secondary {
   max-width: 60%;
   padding: 10px;
   border-radius: 10px;
-  white-space: pre-wrap;
+  white-space: pre-line;
+  line-height: 1.4;
+}
+
+.message * {
+  margin: 0;
+}
+
+.message p {
+  margin-bottom: 6px;
+}
+
+.message p:last-child {
+  margin-bottom: 0;
 }
 
 .message.user {
@@ -227,4 +270,44 @@ button.secondary {
 .message.ai {
   background: #2a2f3a;
   align-self: flex-start;
+}
+
+.logout-btn {
+  background: #e11d48;
+  color: white;
+  border: none;
+
+  padding: 10px 12px;
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  font-family: Arial, sans-serif; /* match body exactly */
+  font-size: 14px;               /* lock size */
+  line-height: 1;                /* prevents height drift */
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout-btn:hover {
+  opacity: 0.9;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;              /* removes bright default glow */
+  border-color: #515c72;      /* subtle, close to default border */
+  box-shadow: none;           /* removes glow/halo effect */
+}
+
+.delete-btn {
+  background: #e11d48 !important;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #be123c !important;
 }

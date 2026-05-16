@@ -9,14 +9,21 @@ export default function Chat({
   setActivePresetId,
   messages,
   onSend,
-  onCreatePreset
+  onCreatePreset,
+  onLogout,
+  onEditPreset
 }: {
   presets: Preset[];
   activePreset: Preset | null;
   setActivePresetId: (id: string) => void;
   messages: Message[];
-  onSend: (text: string) => void;
+  onSend: (payload: {
+    text: string;
+    image?: File | null;
+  }) => void;
   onCreatePreset: () => void;
+  onLogout: () => void;
+  onEditPreset: (preset: Preset) => void;
 }) {
   return (
     <div className="chat-page">
@@ -25,6 +32,8 @@ export default function Chat({
         activePreset={activePreset}
         setActivePresetId={setActivePresetId}
         onCreatePreset={onCreatePreset}
+        onLogout={onLogout}
+        onEditPreset={onEditPreset}
       />
 
       <MessageList messages={messages} />

@@ -2,41 +2,60 @@ import { useState } from "react";
 import type { Preset } from "../types";
 
 export default function CreatePreset({
+  preset,
   onSave,
-  onCancel
+  onCancel,
+  onDelete
 }: {
+  preset?: Preset | null;
   onSave: (preset: Preset) => void;
   onCancel: () => void;
+  onDelete?: (id: string) => void; // ✅ FIXED HERE
 }) {
-  const [name, setName] = useState("");
-  const [instructions, setInstructions] = useState("");
+  const isEditing = !!preset;
+
+  const [name, setName] = useState(preset?.name || "");
+  const [instructions, setInstructions] = useState(
+    preset?.instructions || ""
+  );
 
   const handleSave = () => {
     if (!name.trim()) return;
 
     onSave({
-      id: crypto.randomUUID(),
+      id: preset?.id || crypto.randomUUID(),
       name,
       instructions
     });
 
-    // optional cleanup after save
     setName("");
     setInstructions("");
   };
 
   const handleCancel = () => {
-    // reset form so next open is clean
     setName("");
     setInstructions("");
-
     onCancel();
+  };
+
+  const handleDelete = () => {
+    if (!preset || !onDelete) return;
+
+    const confirmed = window.confirm(
+      `Delete "${preset.name}"?`
+    );
+
+    if (!confirmed) return;
+
+    onDelete(preset.id); // ✅ now correctly passes string id
   };
 
   return (
     <div className="center-page">
       <div className="card">
-        <h1>Create AI Preset</h1>
+        <h1>
+          {isEditing ? "Edit AI Preset" : "Create AI Preset"}
+        </h1>
 
         <label>Preset Name</label>
         <input
@@ -58,8 +77,17 @@ export default function CreatePreset({
           </button>
 
           <button onClick={handleSave}>
-            Save Preset
+            {preset ? "Save Changes" : "Save Preset"}
           </button>
+
+          {preset && onDelete && (
+            <button
+              className="delete-btn"
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+          )}
         </div>
       </div>
     </div>
