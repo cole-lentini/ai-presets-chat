@@ -3,6 +3,6 @@
     "vite": "^8.0.13"
   },
   "scripts": {
-    "build": "cd client && npm run build"
+    "build": "cd client && npm install && npm run build"
   }
 }

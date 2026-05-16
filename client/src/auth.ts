@@ -1,25 +1,39 @@
 import { supabase } from "./lib/supabase";
 
 export async function loginWithUsername(username: string) {
-  // 1. check if user exists
-  let { data: user } = await supabase
+  const clean = username.trim();
+
+  // 1. try to find user (SAFE: no crash if not found)
+  const { data: existingUser, error: findError } = await supabase
     .from("users")
     .select("*")
-    .eq("username", username)
-    .single();
+    .eq("username", clean)
+    .maybeSingle();
 
-  // 2. if not, create it
+  if (findError) {
+    console.error("User lookup error:", findError);
+    return null;
+  }
+
+  let user = existingUser;
+
+  // 2. if not found → create user
   if (!user) {
-    const { data: newUser } = await supabase
+    const { data: newUser, error: createError } = await supabase
       .from("users")
-      .insert({ username })
+      .insert({ username: clean })
       .select()
-      .single();
+      .maybeSingle();
+
+    if (createError) {
+      console.error("User creation error:", createError);
+      return null;
+    }
 
     user = newUser;
   }
 
-  // 3. store "session" locally
+  // 3. store session
   localStorage.setItem("user", JSON.stringify(user));
 
   return user;

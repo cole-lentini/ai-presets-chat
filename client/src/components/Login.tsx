@@ -33,14 +33,26 @@ export default function Login({ onLogin }: Props) {
             setError(null);
 
             try {
-              const user = await loginWithUsername(username);
+              const cleanUsername = username.trim();
 
-              if (!user) {
-                setError("User not found or failed to login");
+              // 1. try to find user
+              const existing = await loginWithUsername(cleanUsername);
+
+              // If your current function returns null → create instead
+              if (existing) {
+                onLogin(existing);
                 return;
               }
 
-              onLogin(user);
+              // 2. create new user (fallback)
+              const newUser = await loginWithUsername(cleanUsername);
+
+              if (!newUser) {
+                setError("Failed to create user");
+                return;
+              }
+
+              onLogin(newUser);
             } catch (err) {
               console.error(err);
               setError("Login failed");
